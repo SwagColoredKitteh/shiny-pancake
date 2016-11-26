@@ -10,6 +10,11 @@ Show me a gif!
 
 ![Preview](https://swagcoloredkitteh.github.io/shiny-pancake/preview.gif)
 
+How do I install it?
+--------------------
+
+You can use `cargo install shiny-pancake`.
+
 How do I use it?
 ----------------
 
