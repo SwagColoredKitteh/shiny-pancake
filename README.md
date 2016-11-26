@@ -1,10 +1,14 @@
-Shiny Pancake
-=============
+# Shiny Pancake [![Crates.io](https://img.shields.io/crates/v/shiny-pancake.svg)](https://crates.io/crates/shiny-pancake)
 
 What is this?
 -------------
 
 It's a small rendering tool that takes commands from stdin.
+
+Show me a gif!
+--------------
+
+![Preview](https://swagcoloredkitteh.github.io/shiny-pancake/preview.gif)
 
 How do I use it?
 ----------------
@@ -23,6 +27,7 @@ It listens for a few commands on its standard input, these commands are:
     #RECT <X> <Y> <W> <H>      Draw a rectangle at (X, Y) with size (W, H).
     #CIRCLE <X> <Y> <RADIUS>   Draw a circle at (X, Y) with radius RADIUS.
     #ELLIPSE <X> <Y> <W> <H>   Draw an ellipse at (X, Y) with size (W, H).
+    #DELAY <MS>                Pause for MS milliseconds, this is useful for recording replays.
 
 The commands are all case-insensitive.
 Every line that is not prefixed with any of the commands is ignored.
