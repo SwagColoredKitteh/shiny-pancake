@@ -1,7 +1,13 @@
 [package]
 name = "shiny-pancake"
+description = "A renderer that takes commands from standard input."
 version = "0.1.0"
 authors = ["SwagColoredKitteh <kittycake@openmailbox.org>"]
+license = "GPL-3.0"
+license-file = "LICENSE"
+readme = "README.md"
+homepage = "https://github.com/SwagColoredKitteh/shiny-pancake"
+repository = "https://github.com/SwagColoredKitteh/shiny-pancake"
 
 [dependencies]
-piston_window = "*"
+piston_window = "0.57.0"
