@@ -5,10 +5,12 @@ What is this?
 
 It's a small rendering tool that takes commands from stdin.
 
-Show me a gif!
---------------
+Show me gifs!
+-------------
 
 ![Preview](https://swagcoloredkitteh.github.io/shiny-pancake/preview.gif)
+
+![Preview](https://swagcoloredkitteh.github.io/shiny-pancake/preview2.gif)
 
 How do I install it?
 --------------------
