@@ -1,4 +1,7 @@
 extern crate piston_window;
+extern crate clap;
+
+use clap::{Arg, App};
 
 use std::io;
 
@@ -71,18 +74,36 @@ fn render_thread(title: String, width: u32, height: u32, state: Arc<Mutex<Render
 }
 
 fn main() {
-    let stdin = io::stdin();
-    let mut lines = stdin.lock().lines().map(Result::unwrap);
+    let matches = App::new(env!("CARGO_PKG_NAME"))
+                      .version(env!("CARGO_PKG_VERSION"))
+                      .about(env!("CARGO_PKG_DESCRIPTION"))
+                      .arg(Arg::with_name("size")
+                               .short("s")
+                               .long("size")
+                               .value_name("WIDTHxHEIGHT")
+                               .help("Sets the window size. (default: 640x480)")
+                               .takes_value(true))
+                      .arg(Arg::with_name("title")
+                               .short("t")
+                               .long("title")
+                               .value_name("TITLE")
+                               .help("Sets the window title.")
+                               .takes_value(true))
+                      .get_matches();
+    
+    let title = matches.value_of("title").unwrap_or(env!("CARGO_PKG_NAME")).to_owned();
 
-    let title = lines.next().unwrap();
     let (width, height) = {
-        let line = lines.next().unwrap();
-        let mut sp = line.split(" ");
+        let param = matches.value_of("size").unwrap_or("640x480");
+        let mut sp = param.split("x");
         (
             sp.next().unwrap().parse().unwrap(),
             sp.next().unwrap().parse().unwrap()
         )
     };
+
+    let stdin = io::stdin();
+    let lines = stdin.lock().lines().map(Result::unwrap);
 
     let my_render_state = Arc::new(Mutex::new(RenderState::new()));
     let other_render_state = my_render_state.clone();
@@ -101,17 +122,17 @@ fn main() {
         }
         let cmd: String = pop(&mut sp);
         match cmd.to_uppercase().borrow() {
-            "RESET" => {
+            "#RESET" => {
                 let mut guard = my_render_state.lock().unwrap();
                 guard.shapes.clear();
             },
-            "COLOR" => {
+            "#COLOR" => {
                 color.0 = pop(&mut sp);
                 color.1 = pop(&mut sp);
                 color.2 = pop(&mut sp);
                 color.3 = pop(&mut sp);
             },
-            "RECT" => {
+            "#RECT" => {
                 let mut guard = my_render_state.lock().unwrap();
                 let x: f64 = pop(&mut sp);
                 let y: f64 = pop(&mut sp);
@@ -119,14 +140,14 @@ fn main() {
                 let height: f64 = pop(&mut sp);
                 guard.shapes.push(Shape::Rect(color, Vec2(x, y), Vec2(width, height)));
             },
-            "CIRCLE" => {
+            "#CIRCLE" => {
                 let mut guard = my_render_state.lock().unwrap();
                 let x: f64 = pop(&mut sp);
                 let y: f64 = pop(&mut sp);
                 let radius: f64 = pop(&mut sp);
                 guard.shapes.push(Shape::Ellipse(color, Vec2(x - radius, y - radius), Vec2(radius * 2., radius * 2.)));
             },
-            "ELLIPSE" => {
+            "#ELLIPSE" => {
                 let mut guard = my_render_state.lock().unwrap();
                 let x: f64 = pop(&mut sp);
                 let y: f64 = pop(&mut sp);
@@ -134,7 +155,7 @@ fn main() {
                 let height: f64 = pop(&mut sp);
                 guard.shapes.push(Shape::Ellipse(color, Vec2(x, y), Vec2(width, height)));
             },
-            "DELAY" => {
+            "#DELAY" => {
                 thread::sleep(Duration::from_millis(pop(&mut sp)));
             },
             _ => ()
