@@ -37,7 +37,8 @@ impl Color {
 #[derive(Copy, Clone, Debug, PartialEq, PartialOrd)]
 enum Shape {
     Ellipse(Color, Vec2, Vec2),
-    Rect(Color, Vec2, Vec2)
+    Rect(Color, Vec2, Vec2),
+    Line(Color, Vec2, Vec2)
 }
 
 #[derive(Clone, Debug)]
@@ -66,6 +67,9 @@ fn render_thread(title: String, width: u32, height: u32, state: Arc<Mutex<Render
                     },
                     Shape::Rect(col, pos, size) => {
                         rectangle(col.to_arr(), [pos.0, pos.1, size.0, size.1], c.transform, g);
+                    },
+                    Shape::Line(col, from, to) => {
+                        line(col.to_arr(), 2., [from.0, from.1, to.0, to.1], c.transform, g);
                     }
                 }
             }
@@ -154,6 +158,14 @@ fn main() {
                 let width: f64 = pop(&mut sp);
                 let height: f64 = pop(&mut sp);
                 guard.shapes.push(Shape::Ellipse(color, Vec2(x, y), Vec2(width, height)));
+            },
+            "#LINE" => {
+                let mut guard = my_render_state.lock().unwrap();
+                let x1: f64 = pop(&mut sp);
+                let y1: f64 = pop(&mut sp);
+                let x2: f64 = pop(&mut sp);
+                let y2: f64 = pop(&mut sp);
+                guard.shapes.push(Shape::Line(color, Vec2(x1, y1), Vec2(x2, y2)));
             },
             "#DELAY" => {
                 thread::sleep(Duration::from_millis(pop(&mut sp)));
