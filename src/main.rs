@@ -1,4 +1,5 @@
 extern crate piston_window;
+extern crate window;
 extern crate clap;
 
 use clap::{Arg, App};
@@ -17,7 +18,14 @@ use std::borrow::Borrow;
 
 use std::io::prelude::*;
 
-use piston_window::*;
+use piston_window::{ clear, ellipse, rectangle, line
+                   , WindowSettings, PistonWindow };
+
+#[cfg(feature = "sdl2-backend")] extern crate sdl2_window;
+#[cfg(feature = "sdl2-backend")] use sdl2_window::Sdl2Window;
+
+#[cfg(feature = "glutin-backend")] extern crate glutin_window;
+#[cfg(feature = "glutin-backend")] use glutin_window::GlutinWindow;
 
 #[derive(Copy, Clone, Debug, PartialEq, PartialOrd)]
 struct Vec2(f64, f64);
@@ -54,8 +62,18 @@ impl RenderState {
     }
 }
 
+#[cfg(feature = "sdl2-backend")]
+fn create_window(title: String, width: u32, height: u32) -> PistonWindow<Sdl2Window> {
+    WindowSettings::new(title, [width, height]).build().unwrap()
+}
+
+#[cfg(feature = "glutin-backend")]
+fn create_window(title: String, width: u32, height: u32) -> PistonWindow<GlutinWindow> {
+    WindowSettings::new(title, [width, height]).build().unwrap()
+}
+
 fn render_thread(title: String, width: u32, height: u32, state: Arc<Mutex<RenderState>>) {
-    let mut wnd: PistonWindow = WindowSettings::new(title, [width, height]).build().unwrap();
+    let mut wnd = create_window(title, width, height);
     while let Some(e) = wnd.next() {
         wnd.draw_2d(&e, |c, g| {
             clear([0., 0., 0., 1.], g);

@@ -16,6 +16,7 @@ How do I install it?
 --------------------
 
 You can use `cargo install shiny-pancake`.
+If you wish to use the SDL2 backend, you can use `--no-default-features --features sdl2-backend`.
 
 How do I use it?
 ----------------
