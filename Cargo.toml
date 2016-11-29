@@ -1,7 +1,7 @@
 [package]
 name = "shiny-pancake"
 description = "A renderer that takes commands from standard input."
-version = "0.3.0"
+version = "0.4.0"
 authors = ["SwagColoredKitteh <kittycake@openmailbox.org>"]
 license-file = "LICENSE"
 readme = "README.md"
