@@ -1,6 +1,6 @@
 [root]
 name = "shiny-pancake"
-version = "0.3.0"
+version = "1.0.0"
 dependencies = [
  "clap 2.19.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "piston_window 0.58.0 (registry+https://github.com/rust-lang/crates.io-index)",

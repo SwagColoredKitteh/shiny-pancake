@@ -37,7 +37,6 @@ It listens for a few commands on its standard input, these commands are:
     #ELLIPSE <X> <Y> <W> <H>   Draw an ellipse at (X, Y) with size (W, H).
     #LINE <X1> <Y1> <X2> <Y2>  Draw a line from (X1, Y1) to (X2, Y2).
     #FRAME_START               Start a new frame.
-    #DELAY <MS>                (deprecated) Pause for MS milliseconds, this is useful for recording replays.
 
 The commands are all case-insensitive.
 Every line that is not prefixed with any of the commands is ignored.
