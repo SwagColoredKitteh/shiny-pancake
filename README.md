@@ -29,14 +29,16 @@ What's the protocol like?
 
 It listens for a few commands on its standard input, these commands are:
 
-    #RESET                     Reset the draw state.
-    #COLOR <R> <G> <B> <A>     Set the current drawing color to (R, G, B) and the alpha to A.
-                               These are all unsigned integers with values from 0 to 255.
-    #RECT <X> <Y> <W> <H>      Draw a rectangle at (X, Y) with size (W, H).
-    #CIRCLE <X> <Y> <RADIUS>   Draw a circle at (X, Y) with radius RADIUS.
-    #ELLIPSE <X> <Y> <W> <H>   Draw an ellipse at (X, Y) with size (W, H).
-    #LINE <X1> <Y1> <X2> <Y2>  Draw a line from (X1, Y1) to (X2, Y2).
-    #FRAME_START               Start a new frame.
+    #STROKE_COLOR <R> <G> <B> <A> Set the stroke color. Values from 0 to 255.
+    #FILL_COLOR <R> <G> <B> <A>   Set the fill color. Values from 0 to 255.
+    #NOSTROKE                     Set the stroke color to (0, 0, 0, 0).
+    #NOFILL                       Set the fill color to (0, 0, 0, 0).
+    #STROKE_WIDTH <W>             Set the stroke width.
+    #RECT <X> <Y> <W> <H>         Draw a rectangle at (X, Y) with size (W, H).
+    #CIRCLE <X> <Y> <RADIUS>      Draw a circle at (X, Y) with radius RADIUS.
+    #ELLIPSE <X> <Y> <W> <H>      Draw an ellipse at (X, Y) with size (W, H).
+    #LINE <X1> <Y1> <X2> <Y2>     Draw a line from (X1, Y1) to (X2, Y2).
+    #FRAME_START                  Start a new frame.
 
 The commands are all case-insensitive.
 Every line that is not prefixed with any of the commands is ignored.

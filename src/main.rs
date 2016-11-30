@@ -31,41 +31,56 @@ use shape::*;
 use render_state::*;
 use renderer::*;
 
-fn cmd_reset(_: &mut Context, state: &mut RenderState) {
-    state.last_frame_mut().shapes.clear();
-}
-
 fn cmd_frame_start(_: &mut Context, state: &mut RenderState) {
     state.new_frame();
 }
 
 fn cmd_circle(ctx: &mut Context, state: &mut RenderState, x: f64, y: f64, radius: f64) {
-    state.last_frame_mut().shapes.push(Shape::Ellipse(ctx.color, Vec2(x - radius, y - radius), Vec2(radius * 2., radius * 2.)));
+    state.last_frame_mut().shapes.push(Shape::Ellipse(ctx.fill_color, ctx.stroke_color, ctx.stroke_width, Vec2(x - radius, y - radius), Vec2(radius * 2., radius * 2.)));
 }
 
 fn cmd_ellipse(ctx: &mut Context, state: &mut RenderState, x: f64, y: f64, w: f64, h: f64) {
-    state.last_frame_mut().shapes.push(Shape::Ellipse(ctx.color, Vec2(x, y), Vec2(w, h)));
+    state.last_frame_mut().shapes.push(Shape::Ellipse(ctx.fill_color, ctx.stroke_color, ctx.stroke_width, Vec2(x, y), Vec2(w, h)));
 }
 
 fn cmd_rect(ctx: &mut Context, state: &mut RenderState, x: f64, y: f64, w: f64, h: f64) {
-    state.last_frame_mut().shapes.push(Shape::Rect(ctx.color, Vec2(x, y), Vec2(w, h)));
+    state.last_frame_mut().shapes.push(Shape::Rect(ctx.fill_color, ctx.stroke_color, ctx.stroke_width, Vec2(x, y), Vec2(w, h)));
 }
 
-fn cmd_color(ctx: &mut Context, _: &mut RenderState, r: u8, g: u8, b: u8, a: u8) {
-    ctx.color = Color(r, g, b, a);
+fn cmd_fill_color(ctx: &mut Context, _: &mut RenderState, r: u8, g: u8, b: u8, a: u8) {
+    ctx.fill_color = Color(r, g, b, a);
+}
+
+fn cmd_stroke_color(ctx: &mut Context, _: &mut RenderState, r: u8, g: u8, b: u8, a: u8) {
+    ctx.stroke_color = Color(r, g, b, a);
+}
+
+fn cmd_stroke_width(ctx: &mut Context, _: &mut RenderState, width: f64) {
+    ctx.stroke_width = width;
 }
 
 fn cmd_line(ctx: &mut Context, state: &mut RenderState, x1: f64, y1: f64, x2: f64, y2: f64) {
-    state.last_frame_mut().shapes.push(Shape::Line(ctx.color, Vec2(x1, y1), Vec2(x2, y2)));
+    state.last_frame_mut().shapes.push(Shape::Line(ctx.stroke_color, ctx.stroke_width, Vec2(x1, y1), Vec2(x2, y2)));
+}
+
+fn cmd_nofill(ctx: &mut Context, _: &mut RenderState) {
+    ctx.fill_color = Color(0, 0, 0, 0);
+}
+
+fn cmd_nostroke(ctx: &mut Context, _: &mut RenderState) {
+    ctx.stroke_color = Color(0, 0, 0, 0);
 }
 
 fn add_default_commands(ctx: &mut Context) {
-    register_command!(ctx, "#RESET", cmd_reset());
     register_command!(ctx, "#FRAME_START", cmd_frame_start());
+    register_command!(ctx, "#STROKE_COLOR", cmd_stroke_color(u8, u8, u8, u8));
+    register_command!(ctx, "#FILL_COLOR", cmd_fill_color(u8, u8, u8, u8));
+    register_command!(ctx, "#STROKE_WIDTH", cmd_stroke_width(f64));
+    register_command!(ctx, "#NOFILL", cmd_nofill());
+    register_command!(ctx, "#NOSTROKE", cmd_nostroke());
     register_command!(ctx, "#CIRCLE", cmd_circle(f64, f64, f64));
     register_command!(ctx, "#ELLIPSE", cmd_ellipse(f64, f64, f64, f64));
     register_command!(ctx, "#RECT", cmd_rect(f64, f64, f64, f64));
-    register_command!(ctx, "#COLOR", cmd_color(u8, u8, u8, u8));
     register_command!(ctx, "#LINE", cmd_line(f64, f64, f64, f64));
 }
 
@@ -151,12 +166,8 @@ fn main() {
     });
     
     for line in lines {
-        let mut sp = line.split(" ");
-        let cmd = sp.next().unwrap();
-        let mut args: Vec<String> = sp.map(|s| s.to_owned()).collect();
-        args.reverse();
         let mut guard = my_render_state.lock().unwrap();
-        ctx.execute_command(&mut guard, cmd, args);
+        ctx.execute_line(&mut guard, &line);
     }
 
     join_handle.join().unwrap();
