@@ -2,11 +2,12 @@ use std::time::Instant;
 
 use std::sync::{Arc, Mutex};
 
-use piston_window::{ clear, rectangle
+use piston_window::{ clear, rectangle, ellipse, Rectangle, Ellipse, line
                    , WindowSettings, PistonWindow
                    , PressEvent, Button, Key };
 
 use render_state::*;
+use shape::*;
 
 #[cfg(feature = "sdl2-backend")] extern crate sdl2_window;
 #[cfg(feature = "sdl2-backend")] use self::sdl2_window::Sdl2Window;
@@ -39,7 +40,27 @@ pub fn render_thread(title: String, width: u32, height: u32, state: Arc<Mutex<Re
             let t = new_timer.duration_since(timer).subsec_nanos() as i64;
             timer = new_timer;
             guard.nanos_elapsed(t);
-            guard.current_frame().render(c, g);
+            for shape in guard.current_frame().shapes.iter() {
+                match *shape {
+                    Shape::Ellipse(fill_col, border_col, stroke_width, pos, size) => {
+                        let mut elli = Ellipse::new(fill_col.to_arr());
+                        if border_col.3 > 0 {
+                            elli = elli.border(ellipse::Border{ color: border_col.to_arr(), radius: stroke_width });
+                        }
+                        elli.draw([pos.0, pos.1, size.0, size.1], &Default::default(), c.transform, g);
+                    },
+                    Shape::Rect(fill_col, border_col, stroke_width, pos, size) => {
+                        let mut rect = Rectangle::new(fill_col.to_arr());
+                        if border_col.3 > 0 {
+                            rect = rect.border(rectangle::Border { color: border_col.to_arr(), radius: stroke_width });
+                        }
+                        rect.draw([pos.0, pos.1, size.0, size.1], &Default::default(), c.transform, g);
+                    },
+                    Shape::Line(col, stroke_width, from, to) => {
+                        line(col.to_arr(), stroke_width, [from.0, from.1, to.0, to.1], c.transform, g);
+                    }
+                }
+            }
             rectangle([0.2, 0.2, 0.2, 1.], [0., height as f64 - 20., width as f64, height as f64], c.transform, g);
             rectangle([0.7, 0.7, 0.7, 1.], [ 0.
                                            , height as f64 - 20.
