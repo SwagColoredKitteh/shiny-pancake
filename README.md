@@ -38,6 +38,7 @@ It listens for a few commands on its standard input, these commands are:
     #CIRCLE <X> <Y> <RADIUS>      Draw a circle at (X, Y) with radius RADIUS.
     #ELLIPSE <X> <Y> <W> <H>      Draw an ellipse at (X, Y) with size (W, H).
     #LINE <X1> <Y1> <X2> <Y2>     Draw a line from (X1, Y1) to (X2, Y2).
+    #ARROW <X1> <Y1> <X2> <Y2>    Draw an arrow from (X1, Y1) to (X2, Y2).
     #FRAME_START                  Start a new frame.
 
 The commands are all case-insensitive.
