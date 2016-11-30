@@ -2,6 +2,8 @@ use std::time::Instant;
 
 use std::sync::{Arc, Mutex};
 
+use std::f64::consts::PI;
+
 use piston_window::{ clear, rectangle, ellipse, Rectangle, Ellipse, line
                    , WindowSettings, PistonWindow
                    , PressEvent, Button, Key };
@@ -58,6 +60,16 @@ pub fn render_thread(title: String, width: u32, height: u32, state: Arc<Mutex<Re
                     },
                     Shape::Line(col, stroke_width, from, to) => {
                         line(col.to_arr(), stroke_width, [from.0, from.1, to.0, to.1], c.transform, g);
+                    },
+                    Shape::Arrow(col, stroke_width, from, to) => {
+                        line(col.to_arr(), stroke_width, [from.0, from.1, to.0, to.1], c.transform, g);
+                        let diff = from - to;
+                        let diff_norm = diff.norm();
+                        let len = diff.len() / 20.;
+                        let arr1 = to + diff_norm.rotate(PI / 8.) * len * stroke_width * 0.5;
+                        line(col.to_arr(), stroke_width, [to.0, to.1, arr1.0, arr1.1], c.transform, g);
+                        let arr2 = to + diff_norm.rotate(-PI / 8.) * len * stroke_width * 0.5;
+                        line(col.to_arr(), stroke_width, [to.0, to.1, arr1.0, arr2.1], c.transform, g);
                     }
                 }
             }

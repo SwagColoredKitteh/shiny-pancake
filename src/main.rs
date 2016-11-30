@@ -63,6 +63,10 @@ fn cmd_line(ctx: &mut Context, state: &mut RenderState, x1: f64, y1: f64, x2: f6
     state.last_frame_mut().shapes.push(Shape::Line(ctx.stroke_color, ctx.stroke_width, Vec2(x1, y1), Vec2(x2, y2)));
 }
 
+fn cmd_arrow(ctx: &mut Context, state: &mut RenderState, x1: f64, y1: f64, x2: f64, y2: f64) {
+    state.last_frame_mut().shapes.push(Shape::Arrow(ctx.stroke_color, ctx.stroke_width, Vec2(x1, y1), Vec2(x2, y2)));
+}
+
 fn cmd_nofill(ctx: &mut Context, _: &mut RenderState) {
     ctx.fill_color = Color(0, 0, 0, 0);
 }
@@ -82,6 +86,7 @@ fn add_default_commands(ctx: &mut Context) {
     register_command!(ctx, "#ELLIPSE", cmd_ellipse(f64, f64, f64, f64));
     register_command!(ctx, "#RECT", cmd_rect(f64, f64, f64, f64));
     register_command!(ctx, "#LINE", cmd_line(f64, f64, f64, f64));
+    register_command!(ctx, "#ARROW", cmd_arrow(f64, f64, f64, f64));
 }
 
 fn main() {
