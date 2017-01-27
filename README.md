@@ -1,4 +1,4 @@
-# Shiny Pancake [![Crates.io](https://img.shields.io/crates/v/shiny-pancake.svg)](https://crates.io/crates/shiny-pancake)
+# Shiny Pancake [![Crates.io](https://img.shields.io/crates/v/shiny-pancake.svg)](https://crates.io/crates/shiny-pancake) [![Build Status](https://travis-ci.org/SwagColoredKitteh/shiny-pancake.svg?branch=master)](https://travis-ci.org/SwagColoredKitteh/shiny-pancake)
 
 What is this?
 -------------
